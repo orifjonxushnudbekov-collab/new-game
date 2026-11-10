@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futbol Olam - To'liq Futbol Ensiklopediyasi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pitch: {
+                            light: '#2e7d32',
+                            DEFAULT: '#1b5e20',
+                            dark: '#0d3b11',
+                            lines: 'rgba(255,255,255,0.4)'
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        
+        /* Tactical pitch canvas style */
+        .pitch-pattern {
+            background-color: #1b5e20;
+            background-image: repeating-linear-gradient(0deg, #1b5e20, #1b5e20 40px, #2e7d32 40px, #2e7d32 80px);
+        }
+
+        /* Glassmorphic cards */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card-hover:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10b981;
+        }
+
+        /* Pulse effects for positions */
+        .position-node {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .position-node:hover {
+            transform: scale(1.15);
+            z-index: 20;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 glass-card border-b border-gray-800 bg-gray-900/90 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500 flex items-center justify-center text-emerald-400 font-bold text-xl shadow-lg shadow-emerald-900/30">
+                        <i class="fa-solid fa-futbol"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-emerald-200 to-amber-400">FUTBOL OLAM</span>
+                        <span class="block text-[10px] text-gray-400 tracking-widest uppercase font-semibold">Ensiklopediyasi</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2">
+                    <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 flex items-center space-x-2 text-emerald-400 bg-emerald-950/40 border border-emerald-800/40">
+                        <i class="fa-solid fa-compass text-xs"></i>
+                        <span>Asosiy</span>
+                    </button>
+                    <button onclick="switchTab('rules')" id="nav-rules" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-150 flex items-center space-x-2">
+                        <i class="fa-solid fa-book-bookmark text-xs"></i>
+                        <span>Qoidalar</span>
+                    </button>
+                    <button onclick="switchTab('tactics')" id="nav-tactics" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-150 flex items-center space-x-2">
+                        <i class="fa-solid fa-chess-board text-xs"></i>
+                        <span>Taktikalar</span>
+                    </button>
+                    <button onclick="switchTab('leagues')" id="nav-leagues" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-150 flex items-center space-x-2">
+                        <i class="fa-solid fa-trophy text-xs"></i>
+                        <span>Turnirlar</span>
+                    </button>
+                    <button onclick="switchTab('legends')" id="nav-legends" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-150 flex items-center space-x-2">
+                        <i class="fa-solid fa-crown text-xs"></i>
+                        <span>Afsonalar & Stat</span>
+                    </button>
+                    <button onclick="switchTab('dictionary')" id="nav-dictionary" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-150 flex items-center space-x-2">
+                        <i class="fa-solid fa-spell-check text-xs"></i>
+                        <span>Lug'at</span>
+                    </button>
+                </nav>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 border-b border-gray-800 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('home'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-emerald-400 bg-emerald-950/40">Asosiy</button>
+            <button onclick="switchTab('rules'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Qoidalar</button>
+            <button onclick="switchTab('tactics'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Taktikalar</button>
+            <button onclick="switchTab('leagues'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Turnirlar</button>
+            <button onclick="switchTab('legends'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Afsonalar & Statistika</button>
+            <button onclick="switchTab('dictionary'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-800">Lug'at</button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <!-- ================= TAB 1: ASOSIY (HOME & PITCH INTERACTION) ================= -->
+        <section id="tab-home" class="tab-content space-y-12">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-950 via-gray-900 to-black p-8 md:p-12 border border-emerald-800/30 shadow-2xl">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-emerald-400 pointer-events-none">
+                    <i class="fa-solid fa-futbol text-[280px]"></i>
+                </div>
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-4">
+                        <i class="fa-solid fa-star text-amber-400"></i> Dunyodagi 1-raqamli sport turi
+                    </span>
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+                        Futbol Haqida Barcha Ma'lumotlar Bitta Joyda
+                    </h1>
+                    <p class="mt-4 text-gray-300 text-sm sm:text-base leading-relaxed">
+                        Maydondagi har bir pozitsiya, taktik sxemalar, zamonaviy FIFA qoidalari, afsonaviy o'yinchilar hamda futbol terminologiyasi bo'yicha to'liq interaktiv qo'llanma.
+                    </p>
+                    <div class="mt-6 flex flex-wrap gap-4">
+                        <button onclick="switchTab('rules')" class="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-bold transition shadow-lg shadow-emerald-500/20 flex items-center space-x-2">
+                            <span>Qoidalarni O'rganish</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                        <button onclick="switchTab('tactics')" class="px-6 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-semibold border border-gray-700 transition flex items-center space-x-2">
+                            <i class="fa-solid fa-chess-board text-emerald-400"></i>
+                            <span>Taktikalarni Tahlil Qilish</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-card p-5 rounded-2xl border-l-4 border-l-emerald-500">
+                    <div class="text-gray-400 text-xs uppercase font-bold tracking-wider">O'yinchilar Soni</div>
+                    <div class="text-2xl font-black text-white mt-1">11 vs 11</div>
+                    <div class="text-xs text-gray-400 mt-1">Maydondagi har bir jamoa</div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
+                    <div class="text-gray-400 text-xs uppercase font-bold tracking-wider">O'yin Vaqti</div>
+                    <div class="text-2xl font-black text-white mt-1">90 Daqiqa</div>
+                    <div class="text-xs text-gray-400 mt-1">2 ta 45 daqiqalik taym</div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border-l-4 border-l-blue-500">
+                    <div class="text-gray-400 text-xs uppercase font-bold tracking-wider">Maydon O'lchami</div>
+                    <div class="text-2xl font-black text-white mt-1">105 x 68 m</div>
+                    <div class="text-xs text-gray-400 mt-1">Xalqaro standart o'lcham</div>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border-l-4 border-l-purple-500">
+                    <div class="text-gray-400 text-xs uppercase font-bold tracking-wider">Boshqaruv Organi</div>
+                    <div class="text-2xl font-black text-white mt-1">FIFA / IFAB</div>
+                    <div class="text-xs text-gray-400 mt-1">Qoidalarni belgilovchi tashkilot</div>
+                </div>
+            </div>
+
+            <!-- Interactive Pitch Section -->
+            <div class="space-y-6">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-people-group text-emerald-400"></i>
+                            Interaktiv Futbol Maydoni va Pozitsiyalar
+                        </h2>
+                        <p class="text-gray-400 text-sm mt-1">Maydondagi o'yinchi doiralarini bosing va ularning vazifalarini o'rganing.</p>
+                    </div>
+                    <span class="text-xs px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 w-fit">
+                        <i class="fa-solid fa-hand-pointer mr-1"></i> Pozitsiyani tanlang
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Dynamic Pitch Visual -->
+                    <div class="lg:col-span-7 bg-emerald-950 rounded-3xl p-4 sm:p-6 border border-emerald-800/40 shadow-2xl relative">
+                        <!-- Pitch Container -->
+                        <div class="pitch-pattern rounded-2xl aspect-[3/4] sm:aspect-[4/3] w-full relative overflow-hidden border-2 border-white/40 shadow-inner flex flex-col justify-between p-4">
+                            <!-- Pitch Lines Overlay -->
+                            <div class="absolute inset-0 border-4 border-white/40 pointer-events-none rounded-xl m-2"></div>
+                            <!-- Center Circle -->
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-44 sm:h-44 border-2 border-white/40 rounded-full pointer-events-none flex items-center justify-center">
+                                <div class="w-2 h-2 bg-white rounded-full"></div>
+                            </div>
+                            <!-- Halfway line -->
+                            <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-white/40 pointer-events-none"></div>
+                            <!-- Goal Area Top -->
+                            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-40 h-16 border-b-2 border-x-2 border-white/40 pointer-events-none"></div>
+                            <!-- Goal Area Bottom -->
+                            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-40 h-16 border-t-2 border-x-2 border-white/40 pointer-events-none"></div>
+
+                            <!-- PLAYERS ON PITCH (CLICKABLE POSITIONS) -->
+                            <div id="pitch-positions" class="relative z-10 w-full h-full">
+                                <!-- Goalkeeper -->
+                                <button onclick="selectPosition('GK')" class="position-node absolute bottom-[4%] left-[44%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-amber-500 border-2 border-white text-gray-950 font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>GK</span>
+                                </button>
+                                <!-- Left Back -->
+                                <button onclick="selectPosition('LB')" class="position-node absolute bottom-[22%] left-[10%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-600 border-2 border-white text-white font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>LB</span>
+                                </button>
+                                <!-- Center Back 1 -->
+                                <button onclick="selectPosition('CB')" class="position-node absolute bottom-[18%] left-[33%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-600 border-2 border-white text-white font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>CB</span>
+                                </button>
+                                <!-- Center Back 2 -->
+                                <button onclick="selectPosition('CB')" class="position-node absolute bottom-[18%] left-[57%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-600 border-2 border-white text-white font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>CB</span>
+                                </button>
+                                <!-- Right Back -->
+                                <button onclick="selectPosition('RB')" class="position-node absolute bottom-[22%] right-[10%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-600 border-2 border-white text-white font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>RB</span>
+                                </button>
+                                <!-- Defensive Midfielder / Central Midfielder -->
+                                <button onclick="selectPosition('CM')" class="position-node absolute bottom-[42%] left-[30%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-500 border-2 border-white text-gray-950 font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>CM</span>
+                                </button>
+                                <button onclick="selectPosition('CM')" class="position-node absolute bottom-[42%] right-[30%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-500 border-2 border-white text-gray-950 font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>CM</span>
+                                </button>
+                                <!-- Attacking Midfielder -->
+                                <button onclick="selectPosition('CAM')" class="position-node absolute top-[38%] left-[44%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-400 border-2 border-white text-gray-950 font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>CAM</span>
+                                </button>
+                                <!-- Left Winger -->
+                                <button onclick="selectPosition('LW')" class="position-node absolute top-[18%] left-[12%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-rose-500 border-2 border-white text-white font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>LW</span>
+                                </button>
+                                <!-- Striker -->
+                                <button onclick="selectPosition('ST')" class="position-node absolute top-[12%] left-[44%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-rose-600 border-2 border-white text-white font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>ST</span>
+                                </button>
+                                <!-- Right Winger -->
+                                <button onclick="selectPosition('RW')" class="position-node absolute top-[18%] right-[12%] w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-rose-500 border-2 border-white text-white font-bold text-xs sm:text-sm shadow-lg flex flex-col items-center justify-center">
+                                    <span>RW</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Position Detail Box -->
+                    <div class="lg:col-span-5 glass-card p-6 rounded-3xl border border-gray-800 space-y-4">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+                            <span id="pos-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                                Darvozabon
+                            </span>
+                            <span class="text-xs text-gray-400" id="pos-code">GK</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white" id="pos-title">Darvozabon (Goalkeeper)</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed" id="pos-desc">
+                            Darvozabon — darvozani raqib gollaridan himoya qiluvchi yagona o'yinchi. Faqat o'zining jarima maydonchasi ichida to'pga qo'l bilan tegish huquqiga ega. Zamonaviy futbolda darvozabondan pas berish va o'yinni orqadan boshlash mahorati ham talab etiladi.
+                        </p>
+                        
+                        <div class="space-y-3 pt-2">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400">Asosiy Vazifalari:</h4>
+                            <ul class="text-sm text-gray-300 space-y-2" id="pos-tasks">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> Zarbalarni qaytarish va darvoza daxlsizligini saqlash</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> Jarima maydonchasidagi havo to'plarini egallash</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> Himoyachilarga ko'rsatma berish va joylashuvni nazorat qilish</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-4 border-t border-gray-800">
+                            <span class="text-xs text-gray-400 block mb-2">Ushbu pozitsiyaning mashhur vakillari:</span>
+                            <div class="flex flex-wrap gap-2" id="pos-stars">
+                                <span class="px-2.5 py-1 rounded-md bg-gray-800 text-xs text-gray-200">Manuel Neuer</span>
+                                <span class="px-2.5 py-1 rounded-md bg-gray-800 text-xs text-gray-200">Gianluigi Buffon</span>
+                                <span class="px-2.5 py-1 rounded-md bg-gray-800 text-xs text-gray-200">Iker Casillas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: QOIDALAR (RULES & VAR) ================= -->
+        <section id="tab-rules" class="tab-content hidden space-y-8">
+            <div>
+                <h2 class="text-3xl font-extrabold text-white">Futbol Qoidalari va Texnologiyalar</h2>
+                <p class="text-gray-400 text-sm mt-1">IFAB (Xalqaro Futbol Assotsiatsiyalari Kengashi) tomonidan belgilangan rasmiy o'yin qoidalari.</p>
+            </div>
+
+            <!-- Rules Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Offside Card -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-flag"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Offsayd (O'yindan tashqari holat)</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Hujumchi to'p uzatilgan soniyada raqibning darvozabonidan tashqari oxirgi himoyachisidan ko'ra raqib darvozasiga yaqinroq bo me'yorda tursa, offsayd qayd etiladi.
+                    </p>
+                    <div class="p-3 bg-gray-900 rounded-xl text-xs text-rose-300 border border-rose-900/30">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> Qo'llar va bilaklar offsayd hisoblashda inobatga olinmaydi.
+                    </div>
+                </div>
+
+                <!-- Cards Rule -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-square"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Kartochkalar Tizimi</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        <strong>Sariq kartochka:</strong> Qo'pol o'yin, ogohlantirish.<br>
+                        <strong>Qizil kartochka:</strong> Maydondan chetlatish (2 ta sariq yoki to'g'ridan-to'g'ri qizil). Jamoa kamchilikda qoladi.
+                    </p>
+                    <div class="p-3 bg-gray-900 rounded-xl text-xs text-amber-300 border border-amber-900/30">
+                        <i class="fa-solid fa-info-circle mr-1"></i> Qizil kartochka olgan o'yinchi keyingi o'yin(lar)ni o'tkazib yuboradi.
+                    </div>
+                </div>
+
+                <!-- VAR Technology -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-tv"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">VAR (Video Hakam)</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Videotakrorlar tizimi 4 holatda aralashadi: Gol urilganda, Penalti belgilashda, To'g'ridan-to'g'ri qizil kartochkada va O'yinchi shaxsini adashtirganda.
+                    </p>
+                    <div class="p-3 bg-gray-900 rounded-xl text-xs text-blue-300 border border-blue-900/30">
+                        <i class="fa-solid fa-check-double mr-1"></i> Yakuniy qarorni har doim bosh hakam qabul qiladi.
+                    </div>
+                </div>
+
+                <!-- Penalty Rule -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Penalti (11 metrli zarba)</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Jarima maydoni ichida himoyalanayotgan jamoa tomonidan qoida buzilganda belgilanadi. Zarba darvoza chizig'idan 11 metr masofadan yo'llanadi.
+                    </p>
+                </div>
+
+                <!-- Free Kicks -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-shoe-prints"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Jarima va Egri Zarbalar</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        <strong>Bevosita zarba:</strong> Darvozaga to'g'ridan-to'g me'yorda zarba berib gol urish mumkin.<br>
+                        <strong>Egri (Egmas) zarba:</strong> Gol bo'lishi uchun to'p boshqa o'yinchiga tegishi shart.
+                    </p>
+                </div>
+
+                <!-- Substitutions -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-gray-800">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">O'yinchi Almashtirish</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Zamonaviy qoidalarga ko'ra, rasmiy o'yinlarda har bir jamoaga 5 tagacha o'yinchini almashtirishga ruxsat beriladi (3 ta tanaffus imkoniyati ichida).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: TAKTIKALAR (TACTICS BOARD) ================= -->
+        <section id="tab-tactics" class="tab-content hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-white">Futbol Taktikalari va Sxemalari</h2>
+                    <p class="text-gray-400 text-sm mt-1">Mashhur taktik tuzilishlar va ularning ustunlik hamda zaif tomonlari.</p>
+                </div>
+                <!-- Tactical Selector Buttons -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="loadTactic('4-3-3')" id="btn-tactic-433" class="tactic-btn px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-gray-950 shadow-md">4-3-3</button>
+                    <button onclick="loadTactic('4-4-2')" id="btn-tactic-442" class="tactic-btn px-4 py-2 rounded-xl text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700">4-4-2</button>
+                    <button onclick="loadTactic('3-5-2')" id="btn-tactic-352" class="tactic-btn px-4 py-2 rounded-xl text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700">3-5-2</button>
+                    <button onclick="loadTactic('tiki-taka')" id="btn-tactic-tiki" class="tactic-btn px-4 py-2 rounded-xl text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700">Tiki-Taka</button>
+                    <button onclick="loadTactic('counter')" id="btn-tactic-counter" class="tactic-btn px-4 py-2 rounded-xl text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700">Gegenpressing</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Visual Board -->
+                <div class="lg:col-span-7 bg-gray-900 p-6 rounded-3xl border border-gray-800">
+                    <div class="pitch-pattern rounded-2xl aspect-[4/3] w-full relative overflow-hidden border border-white/20 p-4">
+                        <div id="tactic-board" class="w-full h-full relative">
+                            <!-- Players rendered dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tactic Details Info -->
+                <div class="lg:col-span-5 glass-card p-6 rounded-3xl border border-gray-800 space-y-4">
+                    <h3 class="text-2xl font-bold text-white" id="tac-name">4-3-3 Sxemasi</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed" id="tac-desc">
+                        Zamonaviy futbolning eng ommabop va hujumkor sxemalaridan biri. U maydon bo'ylab kenglik yaratadi va qanotlar orqali tezkor hujum qilish imkonini beradi.
+                    </p>
+
+                    <div class="space-y-3 pt-2">
+                        <div class="p-3 bg-emerald-950/40 border border-emerald-800/40 rounded-xl">
+                            <span class="text-xs font-bold text-emerald-400 block mb-1"><i class="fa-solid fa-plus-circle mr-1"></i> Ustun Tomonlari:</span>
+                            <span class="text-xs text-gray-300" id="tac-pros">Yuqori pressing, qanotlarda ustunlik va to'pga egalik qilish osonligi.</span>
+                        </div>
+                        <div class="p-3 bg-rose-950/40 border border-rose-800/40 rounded-xl">
+                            <span class="text-xs font-bold text-rose-400 block mb-1"><i class="fa-solid fa-minus-circle mr-1"></i> Zaif Tomonlari:</span>
+                            <span class="text-xs text-gray-300" id="tac-cons">Qanot himoyachilari hujumga o'tganda ularning ortida bo'sh hududlar qolishi.</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-800">
+                        <span class="text-xs text-gray-400 block mb-2">Ushbu taktikani qo'llagan mashhur jamoalar:</span>
+                        <div class="text-sm font-semibold text-emerald-300" id="tac-teams">
+                            FC Barcelona (Guardiola davri), Real Madrid, Liverpool (Klopp)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: TURNIRLAR & LIGALAR ================= -->
+        <section id="tab-leagues" class="tab-content hidden space-y-8">
+            <div>
+                <h2 class="text-3xl font-extrabold text-white">Yirik Futbol Turnirlari va Ligalari</h2>
+                <p class="text-gray-400 text-sm mt-1">Dunyodagi eng nufuzli milliy va klublar o'rtasidagi musobaqalar.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- World Cup -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-amber-500/20 glass-card-hover">
+                    <div class="flex justify-between items-start">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-earth-americas"></i>
+                        </div>
+                        <span class="text-xs font-bold text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full">Har 4 yilda</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">FIFA Jahon Chempionati</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Sayyoramizning eng yirik va nufuzli futbol musobaqasi. Unda dunyo bo'ylab saralab olingan eng kuchli terma jamoalar kubok uchun kurashadi.
+                    </p>
+                    <div class="text-xs text-gray-400 pt-2 border-t border-gray-800 flex justify-between">
+                        <span>Amaldagi Chempion:</span>
+                        <strong class="text-white">Argentina (2022)</strong>
+                    </div>
+                </div>
+
+                <!-- UEFA Champions League -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-blue-500/20 glass-card-hover">
+                    <div class="flex justify-between items-start">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-star text-xl"></i>
+                        </div>
+                        <span class="text-xs font-bold text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-full">Har mavsum</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">UEFA Chempionlar Ligasi</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Yevropaning eng kuchli klublari o'rtasidagi eng nufuzli musobaqa. O'yinlar haftaning seshanba va chorshanba kunlari o'tkaziladi.
+                    </p>
+                    <div class="text-xs text-gray-400 pt-2 border-t border-gray-800 flex justify-between">
+                        <span>Eng ko'p titul:</span>
+                        <strong class="text-white">Real Madrid (15 marta)</strong>
+                    </div>
+                </div>
+
+                <!-- Premier League -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-purple-500/20 glass-card-hover">
+                    <div class="flex justify-between items-start">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <span class="text-xs font-bold text-purple-400 border border-purple-500/30 px-2.5 py-1 rounded-full">Angliya</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Angliya Premyer-Ligasi (EPL)</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Dunyodagi eng tomoshabop va moliyaviy jihatdan eng boy liga. Yuqori shiddat, kutilmagan natijalar va murosasiz kurash bilan ajralib turadi.
+                    </p>
+                    <div class="text-xs text-gray-400 pt-2 border-t border-gray-800 flex justify-between">
+                        <span>Jamoalar soni:</span>
+                        <strong class="text-white">20 ta klub</strong>
+                    </div>
+                </div>
+
+                <!-- La Liga -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-rose-500/20 glass-card-hover">
+                    <div class="flex justify-between items-start">
+                        <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <span class="text-xs font-bold text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded-full">Ispaniya</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">La Liga</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Texnik va taktik futbolga boy Ispaniya chempionati. "El Clásico" (Real Madrid vs Barcelona) toqnashuvi bilan butun dunyoga mashhur.
+                    </p>
+                </div>
+
+                <!-- Serie A -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-emerald-500/20 glass-card-hover">
+                    <div class="flex justify-between items-start">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-chess-knight"></i>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full">Italiya</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Seriya A</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Tarixan mustahkam himoya va taktik yondashuvga asoslangan Italiya ligasi. Yuventus, Milan va Inter kabi gigantlarga ega.
+                    </p>
+                </div>
+
+                <!-- Uzbekistan Super League -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border border-cyan-500/20 glass-card-hover">
+                    <div class="flex justify-between items-start">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-flag text-xl"></i>
+                        </div>
+                        <span class="text-xs font-bold text-cyan-400 border border-cyan-500/30 px-2.5 py-1 rounded-full">O'zbekiston</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">O'zbekiston Superligasi</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Mamlakatimizning oliy futbol ligasi. 14 ta jamoa ishtirok etadi va g'olib OChL (AFC Champions League) yo'llanmasini qo'lga kiritadi.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: AFSONALAR & STATISTIKA ================= -->
+        <section id="tab-legends" class="tab-content hidden space-y-10">
+            <div>
+                <h2 class="text-3xl font-extrabold text-white">Afsonalar va Statistika</h2>
+                <p class="text-gray-400 text-sm mt-1">Futbol tarixini o'zgartirgan shaxslar va rekordlar hubi.</p>
+            </div>
+
+            <!-- Legends Grid -->
+            <div>
+                <h3 class="text-xl font-bold text-emerald-400 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-crown text-amber-400"></i> Futbol Tarixining Buyuk Afsonalari
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="legends-container">
+                    <!-- Dynamic rendering -->
+                </div>
+            </div>
+
+            <!-- All time scorers & Ballon d'Or Hub -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Ballon d'Or Winners -->
+                <div class="glass-card p-6 rounded-3xl border border-gray-800 space-y-4">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-amber-400"></i> "Oltin To'p" (Ballon d'Or) Rekordchilari
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-gray-900 rounded-xl border border-gray-800">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 font-bold text-sm flex items-center justify-center">1</span>
+                                <span class="font-bold text-white">Lionel Messi</span>
+                            </div>
+                            <span class="text-xs font-bold text-amber-400 bg-amber-950 px-3 py-1 rounded-full border border-amber-800">8 marta</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-900 rounded-xl border border-gray-800">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-8 h-8 rounded-full bg-gray-700 text-gray-300 font-bold text-sm flex items-center justify-center">2</span>
+                                <span class="font-bold text-white">Cristiano Ronaldo</span>
+                            </div>
+                            <span class="text-xs font-bold text-amber-400 bg-amber-950 px-3 py-1 rounded-full border border-amber-800">5 marta</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-900 rounded-xl border border-gray-800">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-8 h-8 rounded-full bg-amber-900/40 text-amber-600 font-bold text-sm flex items-center justify-center">3</span>
+                                <span class="font-bold text-white">Michel Platini / Johan Cruyff / Marco van Basten</span>
+                            </div>
+                            <span class="text-xs font-bold text-amber-400 bg-amber-950 px-3 py-1 rounded-full border border-amber-800">3 marta</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Scorers -->
+                <div class="glass-card p-6 rounded-3xl border border-gray-800 space-y-4">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-futbol text-emerald-400"></i> Rasmiy O'yinlardagi Eng Ko'p Gollar
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-gray-900 rounded-xl border border-gray-800">
+                            <span class="font-bold text-white">Cristiano Ronaldo</span>
+                            <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-800">900+ Gol</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-900 rounded-xl border border-gray-800">
+                            <span class="font-bold text-white">Lionel Messi</span>
+                            <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-800">830+ Gol</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-900 rounded-xl border border-gray-800">
+                            <span class="font-bold text-white">Josef Bican</span>
+                            <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-800">805 Gol</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-900 rounded-xl border border-gray-800">
+                            <span class="font-bold text-white">Pelé</span>
+                            <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-800">757 Gol</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 6: LUG'AT (GLOSSARY) ================= -->
+        <section id="tab-dictionary" class="tab-content hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-white">Futbol Atamalari Lug'ati</h2>
+                    <p class="text-gray-400 text-sm mt-1">Futbolda qo'llaniladigan mashhur iboralar va terminlar izohi.</p>
+                </div>
+                <!-- Search Input -->
+                <div class="relative w-full md:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
+                    <input type="text" id="dict-search" oninput="filterDictionary()" placeholder="Atamani qidirish (masalan: Het-trik)..." 
+                           class="w-full pl-10 pr-4 py-2.5 bg-gray-900 border border-gray-800 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition">
+                </div>
+            </div>
+
+            <!-- Dictionary Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="dictionary-grid">
+                <!-- Dynamic dictionary items -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 bg-gray-950 py-8 mt-12 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <div class="flex justify-center items-center space-x-2 text-emerald-400 font-bold text-sm">
+                <i class="fa-solid fa-futbol"></i>
+                <span>FUTBOL OLAM</span>
+            </div>
+            <p>© 2026 Futbol Olam — Barcha huquqlar himoyalangan. O'zbek tilidagi eng to'liq futbol ensiklopediyasi.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Data Store for Positions
+        const positionData = {
+            'GK': {
+                badge: 'Darvozabon',
+                title: 'Darvozabon (Goalkeeper)',
+                code: 'GK',
+                desc: 'Darvozabon — darvozani raqib gollaridan himoya qiluvchi yagona o\'yinchi. Faqat o\'zining jarima maydonchasi ichida to\'pga qo\'l bilan tegish huquqiga ega. Zamonaviy futbolda darvozabondan pas berish va o\'yinni orqadan boshlash mahorati ham talab etiladi.',
+                tasks: [
+                    'Zarbalarni qaytarish va darvoza daxlsizligini saqlash',
+                    'Jarima maydonchasidagi havo to\'plarini egallash',
+                    'Himoyachilarga ko\'rsatma berish va joylashuvni nazorat qilish'
+                ],
+                stars: ['Manuel Neuer', 'Gianluigi Buffon', 'Iker Casillas', 'Thibaut Courtois']
+            },
+            'CB': {
+                badge: 'Markaziy Himoyachi',
+                title: 'Markaziy Himoyachi (Center Back)',
+                code: 'CB',
+                desc: 'Raqib hujumchilariga to\'sqinlik qiluvchi, havodagi yakka kurashlarda ustunlik qiladigan va darvozabon oldidagi asosiy qalqon vazifasini bajaruvchi o\'yinchi.',
+                tasks: [
+                    'Raqib hujumchilarini yopish (Marking)',
+                    'Shtrafnoy ichidagi havo to\'plarini qaytarish',
+                    'Pozitsiyani to\'g\'ri tanlash va to\'pni olib qo\'yish'
+                ],
+                stars: ['Virgil van Dijk', 'Sergio Ramos', 'Paolo Maldini', 'Nemanja Vidić']
+            },
+            'LB': {
+                badge: 'Chap Qanot Himoyachisi',
+                title: 'Chap Qanot Himoyachisi (Left Back / LB)',
+                code: 'LB',
+                desc: 'Maydonning chap qanotida himoyalanuvchi hamda imkon bo\'lganda hujumga qo\'shilib, uzatmalar (krosslar) oshiruvchi universal o\'yinchi.',
+                tasks: [
+                    'Raqib vingerlarini (qanot hujumchilarini) to\'xtatish',
+                    'Hujum paytida qanot bo\'ylab oldinga o\'tish',
+                    'Shtrafnoyga aniq to\'p uzatish'
+                ],
+                stars: ['Roberto Carlos', 'Marcelo', 'Alphonso Davies', 'Andy Robertson']
+            },
+            'RB': {
+                badge: 'O\'ng Qanot Himoyachisi',
+                title: 'O\'ng Qanot Himoyachisi (Right Back / RB)',
+                code: 'RB',
+                desc: 'Maydonning o\'ng qanoti daxlsizligini ta\'minlovchi va hujum harakatlarida kenglik yaratuvchi tezkor himoyachi.',
+                tasks: [
+                    'O\'ng qanot himoyasini mustahkam tutish',
+                    'Tezkor qarshi hujumlarga ko\'maklashish',
+                    'Hujumchilarga assistentlik qilish'
+                ],
+                stars: ['Dani Alves', 'Trent Alexander-Arnold', 'Phillip Lahm', 'Kyle Walker']
+            },
+            'CM': {
+                badge: 'Markaziy Yrim Himoyachi',
+                title: 'Markaziy Yarim Himoyachi (Central Midfielder / CM)',
+                code: 'CM',
+                desc: 'Futbol maydonining "yuregi". Himoya va hujum o\'rtasidagi bog'liqlikni ta'minlaydi, o'yin tempini nazorat qiladi hamda paslar uzatadi.',
+                tasks: [
+                    'O\'yin tempini va to\'p nazoratini boshqarish',
+                    'Himoyadan hujumga o\'tishni ta\'minlash',
+                    'Maydon markazida to\'p uchun kurashish'
+                ],
+                stars: ['Xavi Hernandez', 'Luka Modrić', 'Toni Kroos', 'Andrés Iniesta']
+            },
+            'CAM': {
+                badge: 'Hujumkor Yarim Himoyachi',
+                title: 'Hujumkor Yarim Himoyachi (Attacking Midfielder / CAM)',
+                code: 'CAM',
+                desc: 'Hujumlar tashkilotchisi, ijodkor o\'yinchi ("Pleymeyker"). Hujumchilarni hal qiluvchi paslar bilan ta\'minlaydi va uzoqdan zarba yo'llaydi.',
+                tasks: [
+                    'Hal qiluvchi (kalit) paslar berish',
+                    'Raqib himoyasi orasidagi bo\'shliqlarni topish',
+                    'Jarima maydoni tashqarisidan gol urish'
+                ],
+                stars: ['Zinedine Zidane', 'Kevin De Bruyne', 'Ronaldinho', 'Kaká']
+            },
+            'LW': {
+                badge: 'Chap Qanot Hujumchisi',
+                title: 'Chap Qanot Hujumchisi (Left Winger / LW)',
+                code: 'LW',
+                desc: 'Yuqori tezlik va driblingga ega o\'yinchi. Chap qanotdan yorib kirib, markazga intiladi yoki to\'pni jarima maydoniga uzatadi.',
+                tasks: [
+                    'Dribling orqali himoyachilarni aldash',
+                    'Markazga kirib zarba berish (Cut-inside)',
+                    'Hujumchiga assist yetkazish'
+                ],
+                stars: ['Cristiano Ronaldo', 'Neymar Jr', 'Vinícius Júnior', 'Eden Hazard']
+            },
+            'RW': {
+                badge: 'O\'ng Qanot Hujumchisi',
+                title: 'O\'ng Qanot Hujumchisi (Right Winger / RW)',
+                code: 'RW',
+                desc: 'O\'ng qanotda harakat qiluvchi tezkor va texnikali hujumchi. Raqib flangini parokanda qilish asosiy vazifasidir.',
+                tasks: [
+                    'Qanotda individual mahorat ko\'rsatish',
+                    'Tezkor qarshi hujumlarni yakunlash',
+                    'Jarima maydonchasiga to\'p oshirish'
+                ],
+                stars: ['Lionel Messi', 'Mohamed Salah', 'Arjen Robben', 'Lamine Yamal']
+            },
+            'ST': {
+                badge: 'Markaziy Hujumchi',
+                title: 'Markaziy Hujumchi (Striker / ST)',
+                code: 'ST',
+                desc: 'Jamoaning asosiy gol muallifi ("Nine"). Jarima maydoni ichida xavfli vaziyatlarni goldan iborat qilish bo\'yicha mutaxassis.',
+                tasks: [
+                    'Vaziyatlarni golga aylantirish',
+                    'Himoyachilarni o\'ziga jalb qilib, jamoadoshlariga joy ochish',
+                    'Bosh bilan va darvozaga bir tegishda zarba berish'
+                ],
+                stars: ['Ronaldo Nazário', 'Robert Lewandowski', 'Erling Haaland', 'Karim Benzema']
+            }
+        };
+
+        // Tactics Data
+        const tacticsData = {
+            '4-3-3': {
+                name: '4-3-3 Sxemasi',
+                desc: 'Zamonaviy futbolning eng ommabop va hujumkor sxemalaridan biri. U maydon bo\'ylab kenglik yaratadi va qanotlar orqali tezkor hujum qilish imkonini beradi.',
+                pros: 'Yuqori pressing, qanotlarda ustunlik va to\'pga egalik qilish osonligi.',
+                cons: 'Qanot himoyachilari hujumga o\'tganda ularning ortida bo\'sh hududlar qolishi.',
+                teams: 'FC Barcelona (Guardiola davri), Real Madrid, Liverpool (Klopp)',
+                positions: [
+                    { top: '88%', left: '45%', label: 'GK' },
+                    { top: '70%', left: '12%', label: 'LB' },
+                    { top: '72%', left: '33%', label: 'CB' },
+                    { top: '72%', left: '57%', label: 'CB' },
+                    { top: '70%', left: '78%', label: 'RB' },
+                    { top: '50%', left: '45%', label: 'CDM' },
+                    { top: '42%', left: '28%', label: 'CM' },
+                    { top: '42%', left: '62%', label: 'CM' },
+                    { top: '18%', left: '15%', label: 'LW' },
+                    { top: '12%', left: '45%', label: 'ST' },
+                    { top: '18%', left: '75%', label: 'RW' }
+                ]
+            },
+            '4-4-2': {
+                name: '4-4-2 Klassik Sxemasi',
+                desc: 'Futbol tarixidagi eng barqaror va muvozanatlashgan klassik shakl. Ikki markaziy hujumchi va mustahkam 4 kishilik yarim himoya chizig\'iga ega.',
+                pros: 'Himoyada juda tartibli, 2 ta hujumchi raqib markaziy himoyachilariga doimiy bosim o\'tkazadi.',
+                cons: 'Markaziy yarim himoyada 3 kishilik jamoalarga qarshi to\'p nazoratini boy berishi mumkin.',
+                teams: 'Manchester United (Ferguson), Atletico Madrid (Simeone)',
+                positions: [
+                    { top: '88%', left: '45%', label: 'GK' },
+                    { top: '70%', left: '12%', label: 'LB' },
+                    { top: '72%', left: '33%', label: 'CB' },
+                    { top: '72%', left: '57%', label: 'CB' },
+                    { top: '70%', left: '78%', label: 'RB' },
+                    { top: '45%', left: '12%', label: 'LM' },
+                    { top: '48%', left: '35%', label: 'CM' },
+                    { top: '48%', left: '55%', label: 'CM' },
+                    { top: '45%', left: '78%', label: 'RM' },
+                    { top: '16%', left: '33%', label: 'ST' },
+                    { top: '16%', left: '57%', label: 'ST' }
+                ]
+            },
+            '3-5-2': {
+                name: '3-5-2 Taktik Tuzilishi',
+                desc: 'Maydon markazida to\'liq ustunlik qilishga mo\'ljallangan sxema. Qanotlarda lateral (lazer) o\'yinchilar butun chiziq bo\'ylab yuguradi.',
+                pros: 'Markazda son jihatdan ustunlik, 3 ta markaziy himoyachi sababli mustahkam himoya.',
+                cons: 'Qanot o\'yinchilaridan juda yuqori jismoniy chidamlilik talab etiladi.',
+                teams: 'Inter Milan (Inzaghi), Italiya T.J. (Conte)',
+                positions: [
+                    { top: '88%', left: '45%', label: 'GK' },
+                    { top: '74%', left: '25%', label: 'CB' },
+                    { top: '76%', left: '45%', label: 'CB' },
+                    { top: '74%', left: '65%', label: 'CB' },
+                    { top: '50%', left: '8%', label: 'LWB' },
+                    { top: '52%', left: '32%', label: 'CM' },
+                    { top: '56%', left: '45%', label: 'CDM' },
+                    { top: '52%', left: '58%', label: 'CM' },
+                    { top: '50%', left: '82%', label: 'RWB' },
+                    { top: '16%', left: '35%', label: 'ST' },
+                    { top: '16%', left: '55%', label: 'ST' }
+                ]
+            },
+            'tiki-taka': {
+                name: 'Tiki-Taka Uslubi',
+                desc: 'Qisqa va aniq paslar, doimiy pozitsion almashinuv hamda to\'pni raqibga bermaslikka asoslangan falsafa.',
+                pros: 'Raqibni jismonan va ruhiyan toalictirish, o\'yin nazoratini to\'liq o'zida tutish.',
+                cons: 'Zarbalar kam bo\'lishi va raqib tezkor qarshi hujumga o\'tganda muammo tug'ilishi.',
+                teams: 'FC Barcelona (2008-2012), Ispaniya T.J. (2008-2012)',
+                positions: [
+                    { top: '88%', left: '45%', label: 'GK' },
+                    { top: '65%', left: '15%', label: 'LB' },
+                    { top: '70%', left: '35%', label: 'CB' },
+                    { top: '70%', left: '55%', label: 'CB' },
+                    { top: '65%', left: '75%', label: 'RB' },
+                    { top: '48%', left: '45%', label: 'DM' },
+                    { top: '38%', left: '32%', label: 'CM' },
+                    { top: '38%', left: '58%', label: 'CM' },
+                    { top: '22%', left: '20%', label: 'LW' },
+                    { top: '26%', left: '45%', label: 'CF' },
+                    { top: '22%', left: '70%', label: 'RW' }
+                ]
+            },
+            'counter': {
+                name: 'Gegenpressing (Yuqori Bosim)',
+                desc: 'To\'p yo'qotilgan zahoti dastlabki 5-8 soniya ichida agressiv pressing o'tkazib, to'pni raqib jarima maydoni yaqinida olib qo'yish uslubi.',
+                pros: 'Golga olib boruvchi eng qisqa yo\'l, raqibni xato qilishga majbur etish.',
+                cons: 'O\'yinchilar juda tez charchaydi, pressing buzilsa himoyada ulkan bo\'shliq qoladi.',
+                teams: 'Borussia Dortmund / Liverpool (Jürgen Klopp)',
+                positions: [
+                    { top: '88%', left: '45%', label: 'GK' },
+                    { top: '60%', left: '15%', label: 'LB' },
+                    { top: '65%', left: '35%', label: 'CB' },
+                    { top: '65%', left: '55%', label: 'CB' },
+                    { top: '60%', left: '75%', label: 'RB' },
+                    { top: '40%', left: '30%', label: 'CM' },
+                    { top: '40%', left: '60%', label: 'CM' },
+                    { top: '25%', left: '45%', label: 'CAM' },
+                    { top: '15%', left: '18%', label: 'LW' },
+                    { top: '12%', left: '45%', label: 'ST' },
+                    { top: '15%', left: '72%', label: 'RW' }
+                ]
+            }
+        };
+
+        // Legends Data
+        const legendsData = [
+            {
+                name: 'Pelé (Edson Arantes)',
+                country: 'Braziliya',
+                role: 'Hujumchi',
+                titles: '3 marta Jahon Chempioni',
+                desc: 'Futbol Qiroli deb tan olingan. Tarixdagi yagona 3 karra Jahon chempioni (1958, 1962, 1970).',
+                icon: 'fa-crown text-amber-400'
+            },
+            {
+                name: 'Diego Maradona',
+                country: 'Argentina',
+                role: 'Hujumkor Yarim Himoyachi',
+                titles: '1986 Jahon Chempioni',
+                desc: 'O\'zgacha noyoq iqtidor va dribling ustasi. 1986-yilgi JChda "Asr goli" va "Xudo qo\'li" goli muallifi.',
+                icon: 'fa-fire text-rose-400'
+            },
+            {
+                name: 'Lionel Messi',
+                country: 'Argentina',
+                role: 'Hujumchi / Pleymeyker',
+                titles: '8 Ballon d\'Or, JCh 2022',
+                desc: 'Tarixdagi eng ko\'p mukofotlangan futbolchi. 8 ta "Oltin to\'p" va barcha mumkin bo\'lgan sovrinlar sohibi.',
+                icon: 'fa-star text-amber-400'
+            },
+            {
+                name: 'Cristiano Ronaldo',
+                country: 'Portugaliya',
+                role: 'Hujumchi',
+                titles: '5 Ballon d\'Or, 5 YeCHL',
+                desc: 'Rasmiy o\'yinlarda tarixdagi eng ko\'p gol urgan to\'purar, mehnatkashlik va jismoniy mukammallik timsoli.',
+                icon: 'fa-bolt text-yellow-400'
+            },
+            {
+                name: 'Zinedine Zidane',
+                country: 'Fransiya',
+                role: 'Markaziy Yarim Himoyachi',
+                titles: 'JCh 1998, Yevro 2000, 3 YeCHL (Murabbiy)',
+                desc: 'Elegantlya va fantastik to\'p nazorati egasi. Ham o\'yinchi, ham murabbiy sifatida YeCHLda zafar quchgan.',
+                icon: 'fa-gem text-cyan-400'
+            },
+            {
+                name: 'Johan Cruyff',
+                country: 'Niderlandiya',
+                role: 'Hujumchi / Taktik',
+                titles: '3 Ballon d\'Or, Totall Futbol',
+                desc: '"Total Futbol" falsafasining otasi. Barcelona va Ajax futbol akademiyasiga zamonaviy tamaloshini qo\'ygan.',
+                icon: 'fa-lightbulb text-emerald-400'
+            }
+        ];
+
+        // Dictionary Data
+        const dictionaryData = [
+            { term: 'Hat-trick (Het-trik)', desc: 'Bitta o\'yinda bitta futbolchi tomonidan urilgan 3 ta gol.' },
+            { term: 'Poker', desc: 'Bitta o\'yinda bitta futbolchi tomonidan urilgan 4 ta gol.' },
+            { term: 'Clean Sheet (Quruq o\'yin)', desc: 'Darvozabon va jamoaning o\'yin davomida o\'z darvozasidan birorta ham gol o\'tkazib yubormasligi.' },
+            { term: 'Assist (Golli uzatma)', desc: 'Gol urilishidan bevosita oldin jamoadoshiga berilgan aniq pas.' },
+            { term: 'Dribling', desc: 'O\'yinchi to\'pni o\'zida saqlagan holda raqib himoyachilarini aldab o\'tish mahorati.' },
+            { term: 'Pressing', desc: 'Raqib to\'pga egalik qilayotganda unga jamoaviy ravishda bosim o\'tkazib, to\'pni olib qo\'yish taktikalari.' },
+            { term: 'Nutmeg (Teshik berish)', desc: 'To\'pni raqib o\'yinchisining oyoqlari orasidan o\'tkazib aldamoq.' },
+            { term: 'Aut', desc: 'To\'p maydonning yon chizig'idan tashqariga chiqib ketganda qo'l bilan o'yinga kiritilishi.' },
+            { term: 'Corner (Burchak zarbasi)', desc: 'To\'p himoyalanayotgan jamoa o\'yinchisidan darvoza ortidagi chiziqdan chiqib ketganda burchakdan o'yinga kiritilishi.' },
+            { term: 'VAR', desc: 'Video Assistant Referee — videotakrorlar orqali hakamga burchak qarorlarini aniqlashtirishda yordam beruvchi tizim.' },
+            { term: 'Offsayd', desc: 'Hujum qiluvchi o\'yinchi pas berilgan momentda raqibning oxirgi himoyachisidan ilgarida bo'lib qolishi.' },
+            { term: 'Wall (Jonli devor)', desc: 'Jarima zarbasi tepilayotganda to'p yo'lini to'sish uchun himoyalanuvchilar tomonidan hosil qilinadigan saflanish.' }
+        ];
+
+        // Functions to control dynamic UI
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Remove active classes from nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-emerald-400', 'bg-emerald-950/40', 'border', 'border-emerald-800/40');
+                btn.classList.add('text-gray-300');
+            });
+
+            // Show selected tab
+            const targetTab = document.getElementById('tab-' + tabId);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+
+            // Highlight active button
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-300');
+                activeBtn.classList.add('text-emerald-400', 'bg-emerald-950/40', 'border', 'border-emerald-800/40');
+            }
+
+            // Window scroll top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function selectPosition(posKey) {
+            const data = positionData[posKey];
+            if (!data) return;
+
+            document.getElementById('pos-badge').innerText = data.badge;
+            document.getElementById('pos-code').innerText = data.code;
+            document.getElementById('pos-title').innerText = data.title;
+            document.getElementById('pos-desc').innerText = data.desc;
+
+            // Render tasks
+            const tasksUl = document.getElementById('pos-tasks');
+            tasksUl.innerHTML = '';
+            data.tasks.forEach(t => {
+                tasksUl.innerHTML += `<li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-400 mt-1"></i> ${t}</li>`;
+            });
+
+            // Render stars
+            const starsDiv = document.getElementById('pos-stars');
+            starsDiv.innerHTML = '';
+            data.stars.forEach(s => {
+                starsDiv.innerHTML += `<span class="px-2.5 py-1 rounded-md bg-gray-800 text-xs text-gray-200 border border-gray-700">${s}</span>`;
+            });
+        }
+
+        function loadTactic(tacticKey) {
+            const tactic = tacticsData[tacticKey];
+            if (!tactic) return;
+
+            // Highlight button
+            document.querySelectorAll('.tactic-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-500', 'text-gray-950');
+                btn.classList.add('bg-gray-800', 'text-gray-300');
+            });
+            const activeBtn = document.getElementById('btn-tactic-' + (tacticKey === 'tiki-taka' ? 'tiki' : tacticKey));
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-gray-800', 'text-gray-300');
+                activeBtn.classList.add('bg-emerald-500', 'text-gray-950');
+            }
+
+            // Update text info
+            document.getElementById('tac-name').innerText = tactic.name;
+            document.getElementById('tac-desc').innerText = tactic.desc;
+            document.getElementById('tac-pros').innerText = tactic.pros;
+            document.getElementById('tac-cons').innerText = tactic.cons;
+            document.getElementById('tac-teams').innerText = tactic.teams;
+
+            // Render positions on board
+            const board = document.getElementById('tactic-board');
+            board.innerHTML = '';
+            tactic.positions.forEach(p => {
+                const node = document.createElement('div');
+                node.className = 'absolute w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-400 border-2 border-white text-gray-950 font-bold text-[10px] sm:text-xs flex items-center justify-center shadow-lg -translate-x-1/2 -translate-y-1/2 transition-all duration-500';
+                node.style.top = p.top;
+                node.style.left = p.left;
+                node.innerHTML = `<span>${p.label}</span>`;
+                board.appendChild(node);
+            });
+        }
+
+        function renderLegends() {
+            const container = document.getElementById('legends-container');
+            container.innerHTML = '';
+            legendsData.forEach(item => {
+                container.innerHTML += `
+                    <div class="glass-card p-6 rounded-2xl space-y-3 border border-gray-800 glass-card-hover">
+                        <div class="flex items-center justify-between">
+                            <i class="fa-solid ${item.icon} text-2xl"></i>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-800 text-gray-300">${item.country}</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-white">${item.name}</h4>
+                        <div class="text-xs font-semibold text-emerald-400">${item.role} • ${item.titles}</div>
+                        <p class="text-gray-300 text-xs leading-relaxed">${item.desc}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function renderDictionary(filter = '') {
+            const container = document.getElementById('dictionary-grid');
+            container.innerHTML = '';
+            const filtered = dictionaryData.filter(item => 
+                item.term.toLowerCase().includes(filter.toLowerCase()) || 
+                item.desc.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-gray-500 text-sm">Hech qanday atama topilmadi.</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                container.innerHTML += `
+                    <div class="glass-card p-5 rounded-2xl border border-gray-800 space-y-2">
+                        <div class="text-base font-bold text-emerald-400">${item.term}</div>
+                        <p class="text-xs text-gray-300 leading-relaxed">${item.desc}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function filterDictionary() {
+            const query = document.getElementById('dict-search').value;
+            renderDictionary(query);
+        }
+
+        // Initialize on Window Load
+        window.onload = function() {
+            loadTactic('4-3-3');
+            renderLegends();
+            renderDictionary();
+        };
+    </script>
+</body>
+</html>
